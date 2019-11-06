@@ -360,7 +360,7 @@ for(i in 2:(length(AdData2))) {
 }</code></pre>
 <p>Identify the model with the best performance</p>
 <pre class="r"><code>paste(&quot;The model with best performance is based on the&quot;, names(AdData2[index]), &quot;column with a mean squared error of:&quot;, min)</code></pre>
-<pre><code>## [1] &quot;The model with best performance is based on the TV.Radio column with a mean squared error of: 1.45373987914182&quot;</code></pre>
+<pre><code>## [1] &quot;The model with best performance is based on the TV.Radio column with a mean squared error of: 3.32045495501745&quot;</code></pre>
 <pre class="r"><code>summary(finalRegModel)</code></pre>
 <pre><code>## 
 ## Call:
@@ -368,18 +368,18 @@ for(i in 2:(length(AdData2))) {
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -7.2515 -0.4567  0.2045  0.8946  2.7338 
+## -7.4506 -0.4781  0.2053  0.7939  2.5550 
 ## 
 ## Coefficients:
 ##                         Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)            8.810e+00  1.646e-01   53.53   &lt;2e-16 ***
-## get(names(AdData2[i])) 1.504e-03  3.476e-05   43.26   &lt;2e-16 ***
+## (Intercept)            9.010e+00  1.465e-01   61.49   &lt;2e-16 ***
+## get(names(AdData2[i])) 1.476e-03  3.098e-05   47.66   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1.436 on 158 degrees of freedom
-## Multiple R-squared:  0.9221, Adjusted R-squared:  0.9216 
-## F-statistic:  1871 on 1 and 158 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1.272 on 158 degrees of freedom
+## Multiple R-squared:  0.935,  Adjusted R-squared:  0.9345 
+## F-statistic:  2271 on 1 and 158 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>For the model with the best performance, calculate the residuals and display them using a histogram.</p>
 <pre class="r"><code>plot(hist(residuals(finalRegModel)))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /><img src="index_files/figure-html/unnamed-chunk-6-2.png" width="672" /> Use the residuals to also plot the normal probability plot that also shows the corresponding straight line. We can see that most of the errors are normlly distirbuted. Except the first bit where we see some of the errors are lower than the rest. This could be because we did not clean the data before running the model.</p>
@@ -494,7 +494,7 @@ if (regModelMSE&gt;decTreeModelMSE){
 } else {
   paste(&quot;Regression Model is reccomended due to a lower mean squared error of&quot;, decTreeModelMSE )
 }</code></pre>
-<pre><code>## [1] &quot;Regression Model is reccomended due to a lower mean squared error of 123.52189558922&quot;</code></pre>
+<pre><code>## [1] &quot;Regression Model is reccomended due to a lower mean squared error of 116.867671804843&quot;</code></pre>
 <p><strong>Regression Models</strong></p>
 <p><em>Advantages</em><br />
 - Even when a linear regression model does not fit the data exactly, we can use it to find the nature of the relationship between the two variables.</p>
