@@ -100,93 +100,6 @@ summary {
 </style>
 
 
-<style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 64px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
-
-<script>
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark it active
-  menuAnchor.parent().addClass('active');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
-});
-</script>
 
 <!-- tabsets -->
 
@@ -258,27 +171,6 @@ $(document).ready(function () {
 
 
 
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
 
 <div class="fluid-row" id="header">
 
@@ -360,7 +252,7 @@ for(i in 2:(length(AdData2))) {
 }</code></pre>
 <p>Identify the model with the best performance</p>
 <pre class="r"><code>paste(&quot;The model with best performance is based on the&quot;, names(AdData2[index]), &quot;column with a mean squared error of:&quot;, min)</code></pre>
-<pre><code>## [1] &quot;The model with best performance is based on the TV.Radio column with a mean squared error of: 3.32045495501745&quot;</code></pre>
+<pre><code>## [1] &quot;The model with best performance is based on the TV.Radio column with a mean squared error of: 1.81949686106092&quot;</code></pre>
 <pre class="r"><code>summary(finalRegModel)</code></pre>
 <pre><code>## 
 ## Call:
@@ -368,18 +260,18 @@ for(i in 2:(length(AdData2))) {
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -7.4506 -0.4781  0.2053  0.7939  2.5550 
+## -7.2795 -0.4495  0.1969  0.8404  2.7185 
 ## 
 ## Coefficients:
 ##                         Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)            9.010e+00  1.465e-01   61.49   &lt;2e-16 ***
-## get(names(AdData2[i])) 1.476e-03  3.098e-05   47.66   &lt;2e-16 ***
+## (Intercept)            8.838e+00  1.620e-01   54.56   &lt;2e-16 ***
+## get(names(AdData2[i])) 1.486e-03  3.266e-05   45.51   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1.272 on 158 degrees of freedom
-## Multiple R-squared:  0.935,  Adjusted R-squared:  0.9345 
-## F-statistic:  2271 on 1 and 158 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1.403 on 158 degrees of freedom
+## Multiple R-squared:  0.9291, Adjusted R-squared:  0.9287 
+## F-statistic:  2071 on 1 and 158 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>For the model with the best performance, calculate the residuals and display them using a histogram.</p>
 <pre class="r"><code>plot(hist(residuals(finalRegModel)))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /><img src="index_files/figure-html/unnamed-chunk-6-2.png" width="672" /> Use the residuals to also plot the normal probability plot that also shows the corresponding straight line. We can see that most of the errors are normlly distirbuted. Except the first bit where we see some of the errors are lower than the rest. This could be because we did not clean the data before running the model.</p>
@@ -494,7 +386,7 @@ if (regModelMSE&gt;decTreeModelMSE){
 } else {
   paste(&quot;Regression Model is reccomended due to a lower mean squared error of&quot;, decTreeModelMSE )
 }</code></pre>
-<pre><code>## [1] &quot;Regression Model is reccomended due to a lower mean squared error of 116.867671804843&quot;</code></pre>
+<pre><code>## [1] &quot;Regression Model is reccomended due to a lower mean squared error of 128.347456681621&quot;</code></pre>
 <p><strong>Regression Models</strong></p>
 <p><em>Advantages</em><br />
 - Even when a linear regression model does not fit the data exactly, we can use it to find the nature of the relationship between the two variables.</p>
