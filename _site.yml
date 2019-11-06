@@ -1,0 +1,9 @@
+name: "Advertising Data Analysis"
+output_dir: "."
+navbar:
+  title: "Advertising Data Analysis"
+    - text: "Advertising Data Analysis"
+      href: advertising_data.html
+output:
+  html_document:
+    theme: paper
