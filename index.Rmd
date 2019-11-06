@@ -2,7 +2,6 @@
 title: "Advertising Data Analysis"
 ---
 
-
 Read the advertising.csv data and store it in AdData.
 ```{r}
 AdData <- read.csv("/Users/Shima/R_projects/advertising_data/advertising.csv", header = TRUE)
@@ -61,12 +60,14 @@ For the model with the best performance, calculate the residuals and display the
 ```{r}
 plot(hist(residuals(finalRegModel)))
 ```
+  
 Use the residuals to also plot the normal probability plot that also shows the corresponding straight line. 
 We can see that most of the errors are normlly distirbuted. Except the first bit where we see some of the errors are lower than the rest. This could be because we did not clean the data before running the model.
 ```{r}
 qqnorm(residuals(finalRegModel))
 qqline(residuals(finalRegModel))
 ```
+  
 Read the advertising_set2.csv data
 ```{r}
 AdSet <- read.csv("advertising_set2.csv", header = TRUE)
@@ -90,6 +91,8 @@ text(pruned_decTreeModel)
 plotcp(decTreeModel) 
 
 ```
+  
+
 Create a linear regression model (do not create non-linear models)
 ```{r}
 linRegModel <- lm(sales~.-id,data=AdSet)
