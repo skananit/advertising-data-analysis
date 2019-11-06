@@ -1,3 +1,178 @@
 ---
+title: "Advertising Data Analysis"
 ---
 
+
+Read the advertising.csv data and store it in AdData.
+```{r}
+AdData <- read.csv("/Users/Shima/R_projects/advertising_data/advertising.csv", header = TRUE)
+head(AdData)
+```
+Prints the column names of the dataset AdData:
+```{r}
+names(AdData)
+```
+Rearrange the columns so that sales becomes the first column in the data set:
+```{r}
+col_order <- c("sales", "TV", "radio", "newspaper")
+AdData <- AdData[,col_order]
+head(AdData)
+```
+Automatically tests regression models that have only one single predictor variable using the following variable changes: sqrt(), variable to the square, or multiplication of two variables.
+```{r}
+# new dataframe with the new predictor variables 
+# sales is the prediction (y variable)
+# followed by square root / squared / multiplication of other variables 
+AdData2 <- data.frame ("Sales" = AdData$sales, "TV"=AdData$TV, "sqrtTV" = sqrt(AdData$TV), "TV^2"= (AdData$TV)^2, "TV*Radio" = (AdData$TV*AdData$radio),"TV*Paper" = (AdData$TV*AdData$newspaper), "Radio" = AdData$radio, "sqrtRadio" = sqrt(AdData$radio), "Radio^2" = (AdData$radio)^2, "Radio*Newspaper" = (AdData$radio * AdData$newspaper),  "Newspaper" = AdData$newspaper, "sqrtNewspaper" = sqrt(AdData$newspaper), "Newspaper^2" = (AdData$newspaper)^2)
+head(AdData2)
+
+# testing and training sets 
+num_samples=dim(AdData2) [1]
+sampling.rate = 0.8
+training <- sample(1:num_samples,sampling.rate*num_samples,replace = FALSE)
+trainingSet <- subset(AdData2[training,])
+testing <- setdiff(1:num_samples,training)
+testingSet <- subset(AdData2[testing,])
+
+# automatic testing of regModels in for loop - picks the model with lowest mse
+# min is initialized to a really big number for the first loop
+min <- 1000000000000000
+# loop through the new cols (new variables) - exclude sales so loop starts at 2 
+for(i in 2:(length(AdData2))) {
+  # current model (i)
+  regModel <- lm(Sales~get(names(AdData2[i])),data = trainingSet)  
+  # error = sales predictions from current model (i) -  actual sales predictions from testing set
+  error <- predict(regModel,testingSet,type="response") - testingSet$Sales
+  mse <- mean(error^2)
+  # check if we encountred a new min mse
+  if(mse<min) {
+    min <- mse
+    finalRegModel <- regModel
+    index <- i 
+  }
+}
+```
+Identify the model with the best performance
+```{r}
+paste("The model with best performance is based on the", names(AdData2[index]), "column with a mean squared error of:", min)
+summary(finalRegModel)
+```
+For the model with the best performance, calculate the residuals and display them using a histogram.
+```{r}
+plot(hist(residuals(finalRegModel)))
+```
+Use the residuals to also plot the normal probability plot that also shows the corresponding straight line. 
+We can see that most of the errors are normlly distirbuted. Except the first bit where we see some of the errors are lower than the rest. This could be because we did not clean the data before running the model.
+```{r}
+qqnorm(residuals(finalRegModel))
+qqline(residuals(finalRegModel))
+```
+Read the advertising_set2.csv data
+```{r}
+AdSet <- read.csv("advertising_set2.csv", header = TRUE)
+head(AdSet)
+```
+Create a decision tree model to predict Sales
+```{r}
+# load library
+library(rpart)
+
+# create decision tree model based on sales 
+decTreeModel <- rpart(sales~.-id, data=AdSet)
+plot(decTreeModel, margin=0.1)
+text(decTreeModel)
+
+# prune tree at 0.016
+plotcp(decTreeModel) 
+pruned_decTreeModel = prune(decTreeModel,cp=0.016)
+plot(pruned_decTreeModel,margin = 0.01)
+text(pruned_decTreeModel)
+plotcp(decTreeModel) 
+
+```
+Create a linear regression model (do not create non-linear models)
+```{r}
+linRegModel <- lm(sales~.-id,data=AdSet)
+summary(linRegModel)
+```
+The equation of the regression function f(x) is as follows:   
+b0 is the intecept, and the coefficients b1,b2,b3 can be multipled by the amount of TV, radio, and newspaper x1,x2,x3 respectively.  
+Equation = b0 + b1(x1) + b2(x2) + b3(x3)  
+Equation = 2.8640961 + 0.0515923(x1) + 0.2177832(x2) + 0.0149192(x3)  
+(where x1, x2, x3 represent the amounts of TV, radio and newspaper respectively)
+```{r}
+# intecept
+b0 <- 2.8640961
+
+# TV
+b1 <- 0.0515923
+
+# radio
+b2 <- 0.2177832
+
+# newspaper
+b3 <- 0.0149192
+
+```
+Evaluate both models and recommend a model that can be used for predictions.
+```{r}
+# create testing / training datasets
+num_samples = dim(AdSet)[1]
+sampling.rate = 0.8
+training<-sample(1:num_samples,sampling.rate*num_samples,replace = TRUE)
+trainingset <- subset(AdSet[training,])
+testing <- setdiff(1:num_samples,training)
+testingset <- subset(AdSet[testing,])
+
+# create regression model 
+regModel <- lm(sales~.-id, data=trainingset)
+
+# predict sales using regression model
+regModelPrediction <- predict(regModel,testingset)
+
+# evaluate regression model
+regModelError = regModelPrediction-testingset$sales
+regModelMSE = mean(regModelError^2)
+
+# creating decision tree model again (same as above)
+decTreeModel <- rpart(sales~.-id, data=AdSet)
+plot(decTreeModel, margin=0.1)
+text(decTreeModel)
+
+# prune tree at 0.016
+plotcp(decTreeModel) 
+pruned_decTreeModel = prune(decTreeModel,cp=0.016)
+plot(pruned_decTreeModel,margin = 0.01)
+text(pruned_decTreeModel)
+plotcp(decTreeModel) 
+
+# predict sales using dec tree model 
+decTreeModelPrediction <- predict(pruned_decTreeModel,testingset)
+decTreeModelError = decTreeModelPrediction - testingset$sales
+decTreeModelMSE = mean(decTreeModelError^2)
+
+if (regModelMSE>decTreeModelMSE){
+  paste("Decision Tree Model is reccomended due to a lower mean squared error of", regModelMSE)
+} else {
+  paste("Regression Model is reccomended due to a lower mean squared error of", decTreeModelMSE )
+}
+
+```
+
+**Regression Models**  
+  
+*Advantages*  
+- Even when a linear regression model does not fit the data exactly, we can use it to find the nature of the relationship between the two variables.  
+  
+*Disadvantages*  
+- A linear regression model works under the assumption that there is a straight-line relationship between vaiables in the linear regression model. This could be  incorrect at times, leading to the model becoming significantly influenced by outliners and anomalies in the data.  
+  
+**Decision Tree Models**  
+  
+*Advantages*  
+- Decision tree models do not require data normalization / scaling.  
+- Missing values in data of decision tree models do not affect the outcome of the model.  
+  
+*Disadvantages*  
+- Because data gets fragmented by each split in a decision tree model, the model created at each split will potentially introduce bias into the overall result.  
+- Decision tree models have a higher probability of overfitting.
